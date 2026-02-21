@@ -16,6 +16,8 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 let DefaultIcon = L.icon({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon2x,
@@ -64,7 +66,7 @@ const handleMapClick = async (latlng) => {
 
   try {
     // Point this to YOUR Python backend (Port 8000)
-    const res = await axios.get(`http://localhost:8000/api/geocoder/reverse`, {
+    const res = await axios.get(`${API_BASE_URL}/api/geocoder/reverse`, {
       params: {
         lat: latlng.lat,
         lon: latlng.lng
@@ -119,7 +121,7 @@ const handleMapClick = async (latlng) => {
     if (locations.length < 2) return alert("Add at least a start point and one destination!");
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:8000/api/optimize', { mode: activeTab, locations });
+      const res = await axios.post(`${API_BASE_URL}/api/optimize`,  { mode: activeTab, locations });
       setRoute(res.data.route_shape); 
       setLocations(res.data.optimized_stops);
     } catch (err) { alert("Backend error!"); }
